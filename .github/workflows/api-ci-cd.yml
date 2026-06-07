@@ -2,26 +2,26 @@
 
 name: CI/CD for nestjs app
 on:
-    workflow_dispatch:
-    push:
-        branches: [main]
+  workflow_dispatch:
+  push:
+    branches: [main]
 
 jobs:
-    # CI Code Checks
-    ci:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v3
-            - name: Use Node.js v25.0.0
-              uses: actions/setup-node@v3
-              with:
-                  node-version: v25.0.0
-            - name: Install dependencies
-              run: npm ci
-              working-directory: ./api
-            - name: Generate Prisma Client
-              run: npx prisma generate
-              working-directory: ./api
-            - name: Run tests
-              run: npm test
+  # CI Code Checks
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Use Node.js v25.0.0
+        uses: actions/setup-node@v3
+        with:
+          node-version: v25.0.0
+      - name: Install dependencies
+        run: npm ci --force
+        working-directory: ./api
+      - name: Generate Prisma Client
+        run: npx prisma generate
+        working-directory: ./api
+      - name: Run tests
+        run: npm test
