@@ -1,11 +1,11 @@
 import { Controller, Body, UseGuards, Post, HttpCode, HttpStatus } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { RegisterDto } from './dto/register.dto';
-import { AuthResponseDto } from './dto/auth-response.dto';
+import { RegisterDTO } from './dto/register.dto';
+import { AuthResponseDTO } from './dto/auth-response.dto';
 import { RefreshTokenGaurd } from './guards/refresh-token.gaurd';
 import { GetUser } from '@/common/decorators/get-user.decorator';
 import { JwtAuthGaurd } from '@/common/gaurds/jwt-auth.gaurd';
-import { LoginDto } from './dto/login.dto';
+import { LoginDTO } from './dto/login.dto';
 import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @Controller('auth')
@@ -16,12 +16,12 @@ export class AuthController {
     @Post('register')
     @HttpCode(201)
     @ApiOperation({ summary: 'Register a new user' })
-    @ApiResponse({ status: 201, description: 'User registered successfully', type: AuthResponseDto })
+    @ApiResponse({ status: 201, description: 'User registered successfully', type: AuthResponseDTO })
     @ApiResponse({ status: 400, description: 'Bad Request' })
     @ApiResponse({ status: 429, description: 'Too Many Requests' })
     @ApiResponse({ status: 500, description: 'Internal Server Error' })
-    async register(@Body() registerDto: RegisterDto): Promise<AuthResponseDto> {
-        return await this.authService.register(registerDto);
+    async register(@Body() RegisterDTO: RegisterDTO): Promise<AuthResponseDTO> {
+        return await this.authService.register(RegisterDTO);
     }
 
     // Refresh access token
@@ -29,12 +29,12 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     @ApiBearerAuth('JWT-refresh')
     @ApiOperation({ summary: 'Refresh access token' })
-    @ApiResponse({ status: 200, description: 'Access token refreshed successfully', type: AuthResponseDto })
+    @ApiResponse({ status: 200, description: 'Access token refreshed successfully', type: AuthResponseDTO })
     @ApiResponse({ status: 401, description: 'Unauthorized' })
     @ApiResponse({ status: 500, description: 'Internal Server Error' })
     @ApiResponse({ status: 429, description: 'Too Many Requests' })
     @UseGuards(RefreshTokenGaurd)
-    async refresh(@GetUser('id') userId: string): Promise<AuthResponseDto> {
+    async refresh(@GetUser('id') userId: string): Promise<AuthResponseDTO> {
         return this.authService.refreshTokens(userId);
     }
 
@@ -57,13 +57,13 @@ export class AuthController {
     @Post('login')
     @HttpCode(HttpStatus.OK)
     @ApiOperation({ summary: 'Login user' })
-    @ApiResponse({ status: 200, description: 'User logged in successfully', type: AuthResponseDto })
+    @ApiResponse({ status: 200, description: 'User logged in successfully', type: AuthResponseDTO })
     @ApiResponse({ status: 400, description: 'Bad Request' })
     @ApiResponse({ status: 401, description: 'Unauthorized' })
     @ApiResponse({ status: 500, description: 'Internal Server Error' })
     @ApiResponse({ status: 429, description: 'Too Many Requests' })
-    async login(@Body() loginDto: LoginDto): Promise<AuthResponseDto> {
+    async login(@Body() LoginDTO: LoginDTO): Promise<AuthResponseDTO> {
         // Invalidate the refresh token by removing it from the database
-        return await this.authService.login(loginDto);
+        return await this.authService.login(LoginDTO);
     }
 }
