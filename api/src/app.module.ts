@@ -8,16 +8,24 @@ import { JwtStrategy } from './modules/auth/strategies/jwt.strategy';
 import { UsersModule } from './modules/users/users.module';
 import { CategoryModule } from './modules/category/category.module';
 import { ProductsModule } from './modules/products/products.module';
+import { OrdersModule } from './modules/orders/orders.module';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
-    PrismaModule, 
-    AuthModule, 
-    ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }), 
-    UsersModule, 
-    CategoryModule, ProductsModule
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60,
+        limit: 10
+      }
+    ]),
+    PrismaModule,
+    AuthModule,
+    ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
+    UsersModule,
+    CategoryModule, ProductsModule, OrdersModule
   ],
   controllers: [AppController],
   providers: [AppService, JwtStrategy],
 })
-export class AppModule {}
+export class AppModule { }

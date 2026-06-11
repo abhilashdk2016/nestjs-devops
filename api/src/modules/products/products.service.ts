@@ -128,7 +128,7 @@ export class ProductsService {
         if(!existingProduct) {
             throw new NotFoundException("Specified product not found");
         }
-        if(updateProductDto.sku && updateProductDto.sku !== existingProduct.sku) {
+        if(updateProductDto && updateProductDto.sku !== existingProduct.sku) {
             const skuTaken = await this.prismaService.product.findUnique({
                 where: { sku: updateProductDto.sku }
             });
@@ -177,11 +177,16 @@ export class ProductsService {
         const product = await this.prismaService.product.findUnique({
             where: { id },
             include: {
-                category: true
+                orderItems: true,
+                cartItems: true
             }
         });
         if (!product) {
             throw new NotFoundException('Product not found');
+        }
+
+        if(product.orderItems.length > 0) {
+            throw new BadRequestException("Cannot delete product as it is part of existing orders. Consider making product inactive");
         }
         
         await this.prismaService.product.delete({ 
