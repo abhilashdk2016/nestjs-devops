@@ -11,6 +11,7 @@ import { ProductsModule } from './modules/products/products.module';
 import { OrdersModule } from './modules/orders/orders.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { PaymentsModule } from './modules/payments/payments.module';
+import { CartModule } from './modules/cart/cart.module';
 
 @Module({
   imports: [
@@ -24,7 +25,7 @@ import { PaymentsModule } from './modules/payments/payments.module';
     AuthModule,
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
     UsersModule,
-    CategoryModule, ProductsModule, OrdersModule, PaymentsModule
+    CategoryModule, ProductsModule, OrdersModule, PaymentsModule, CartModule
   ],
   controllers: [AppController],
   providers: [AppService, JwtStrategy],

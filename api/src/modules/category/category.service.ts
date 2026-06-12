@@ -143,7 +143,7 @@ export class CategoryService {
             const slugTaken = await this.prismaService.category.findUnique({
                 where: { slug: updateCategoryDto.slug }
             });
-            if(!slugTaken) {
+            if(slugTaken) {
                 throw new ConflictException("Category with slug already exists");
             }
         }

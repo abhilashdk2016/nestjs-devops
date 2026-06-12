@@ -132,7 +132,7 @@ export class ProductsService {
             const skuTaken = await this.prismaService.product.findUnique({
                 where: { sku: updateProductDto.sku }
             });
-            if(!skuTaken) {
+            if(skuTaken) {
                 throw new ConflictException("Product with sku already exists");
             }
         }
